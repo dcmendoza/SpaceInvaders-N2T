@@ -6,6 +6,7 @@ class Simulacion {
     static int direccion, direccionX;
 
     constructor Simulacion nuevo(){
+         // Inicializa la pantalla y los objetos del juego
         do Screen.drawRectangle(0,0,511,255);
         do Screen.setColor(true);
 
@@ -22,6 +23,7 @@ class Simulacion {
         let enemigo5 = Enemigo.nuevo(250, 150);
         let enemigo6 = Enemigo.nuevo(270, 70);
 
+        // Dibuja todos los elementos iniciales en pantalla
         do naveEspacial.dibujar();
         do enemigo1.dibujar();
         do enemigo2.dibujar();
@@ -37,21 +39,23 @@ class Simulacion {
         var boolean simulacionActiva, msg;
         var int z, controlReboteTiempo, controlReboteTiempoAlien, controlReboteTiempoDisparo, tiempo, tiempoEnemigo, tiempoDisparo;
 
+        // Inicialización de controles de tiempo y estado
         let simulacionActiva = true;
         let msg = true;
         let controlReboteTiempo = 200;
         let controlReboteTiempoAlien = 3000;
         let controlReboteTiempoDisparo = 50;
 
+        // Bucle principal del juego
         while(simulacionActiva){ 
             let tiempo = tiempo + 1;
             if (tiempo = controlReboteTiempo){
                 let z = Keyboard.keyPressed();
                 if (z = 130){
-                    do naveEspacial.moverIzquierda();
+                    do naveEspacial.moverIzquierda(); // Mueve la nave a la izquierda
                 }
                 if (z = 132){
-                    do naveEspacial.moverDerecha();
+                    do naveEspacial.moverDerecha(); // Mueve la nave a la derecha
                 }
                 if (z = 32){
                     if(disparo.obtenerEstado() = false){
@@ -65,38 +69,39 @@ class Simulacion {
             let tiempoDisparo = tiempoDisparo + 1;
             if (tiempoDisparo = controlReboteTiempoDisparo){
                 if (disparo.obtenerEstado() = true){
-                    do disparo.actualizar();
-                    do comprobarColisiones();
+                    do disparo.actualizar(); // Actualiza la posición del disparo
+                    do comprobarColisiones(); // Comprueba si hubo colisión con un enemigo
                 }
                 let tiempoDisparo = 0;
             }
 
             let tiempoEnemigo = tiempoEnemigo + 1;
             if (tiempoEnemigo = controlReboteTiempoAlien){
-                do actualizarEnemigos();
+                do actualizarEnemigos(); // Mueve los enemigos
                 if(enemigosAlcanzanFondo()){
-                    let simulacionActiva = false;
+                    let simulacionActiva = false; // Termina el juego si los enemigos llegan al fondo
                 }
                 let tiempoEnemigo = 0;
             }            
             
             if (numEnemigos = 0){
-                let simulacionActiva = false;
+                let simulacionActiva = false; // Termina el juego si todos los enemigos han sido eliminados
             }
             if (z = 140){
-                do Screen.clearScreen();
+                do Screen.clearScreen(); // Limpia la pantalla si el jugador decide salir
                 let msg = false;
                 let simulacionActiva = false;
             }
         }
 
+        // Muestra el mensaje final según el resultado del juego
         if(numEnemigos = 0){
             do Ganaste(msg);
         }else{
             do Perdiste(msg);
         }        
 
-        //Dispose from memory
+        // Libera memoria de todos los objetos creados
         do naveEspacial.eliminar();
         do disparo.eliminar();
         do enemigo1.eliminar();
@@ -109,8 +114,8 @@ class Simulacion {
         return;
     }
 
-    //Simulacion over alert
     method void Perdiste(boolean msg){
+        // Muestra el mensaje de "PERDISTE" y espera la interacción del usuario para salir
         var int z;
         if (msg){
             do Output.moveCursor(11, 28);
@@ -131,6 +136,7 @@ class Simulacion {
     }
 
     method void Ganaste(boolean msg){
+        // Muestra el mensaje de "GANASTE" y espera la interacción del usuario para salir
         var int z;
         do Output.moveCursor(11, 29);
         do Output.printString("GANASTE");
@@ -145,6 +151,7 @@ class Simulacion {
     }
     
     method void actualizarEnemigos(){
+        // Actualiza la posición de los enemigos, cambiando de dirección si es necesario
         var boolean moverseEnX, direcccionesCoinciden;
         let direcccionesCoinciden = (direccion = direccionX);
         let moverseEnX = true & enemigo1.verificarMovimiento(direcccionesCoinciden);
@@ -154,6 +161,7 @@ class Simulacion {
         let moverseEnX = moverseEnX & enemigo5.verificarMovimiento(direcccionesCoinciden);
         let moverseEnX = moverseEnX & enemigo6.verificarMovimiento(direcccionesCoinciden);
         if (moverseEnX){
+            // Mueve los enemigos en el eje X
             do enemigo1.actualizarX();
             do enemigo2.actualizarX();
             do enemigo3.actualizarX();
@@ -162,6 +170,7 @@ class Simulacion {
             do enemigo6.actualizarX();
             let direccionX = direccion;
         }else{
+            // Mueve los enemigos en el eje Y
             do enemigo4.actualizarY();
             do enemigo5.actualizarY();
             do enemigo6.actualizarY();
@@ -174,6 +183,7 @@ class Simulacion {
     }
 
     method boolean enemigosAlcanzanFondo(){
+        // Verifica si algún enemigo ha alcanzado el límite inferior
         if (enemigo1.obtenerEstado()){
             if (enemigo1.obtenerY() > 200){
                 return true;
@@ -208,6 +218,7 @@ class Simulacion {
     }
 
     method void comprobarColisiones(){
+        // Verifica si el disparo ha colisionado con algún enemigo y actualiza el estado
         if ((enemigo1.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo1.obtenerX()-2)) & (disparo.obtenerX() < (enemigo1.obtenerX()+11)) & (disparo.obtenerY() > enemigo1.obtenerY()) & (disparo.obtenerY() < (enemigo1.obtenerY()+7))){
             do enemigo1.matar();
             do disparo.reiniciar();

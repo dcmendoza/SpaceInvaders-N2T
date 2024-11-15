@@ -1,0 +1,46 @@
+class Main {
+    // Método principal del programa, que actúa como el punto de inicio
+    function void main() { 
+        var Simulacion simulacion; // Declara una variable para el objeto Simulacion
+        var int z; // Variable para almacenar el código de la tecla presionada
+        var boolean controlRebote; // Controla el rebote para evitar múltiples ejecuciones consecutivas
+
+        // Bucle infinito para mantener el juego en ejecución
+        while(true){ 
+            // Verifica si 'controlRebote' está en falso para inicializar la pantalla
+            if (~controlRebote){
+                do Screen.setColor(false); // Configura el color de la pantalla en negro
+                do Screen.drawRectangle(0,0,511,255); // Limpia la pantalla dibujando un fondo negro
+                do Screen.setColor(true); // Configura el color de dibujo en blanco     
+                do SpaceInvaders.establecerVista(185, 50); // Establece la vista inicial del juego
+                let controlRebote = true; // Activa el control de rebote para evitar inicializaciones repetidas
+                do Sys.wait(300); // Espera 300 milisegundos antes de continuar
+            }
+            
+            // Captura el valor de la tecla presionada
+            let z = Keyboard.keyPressed();
+
+            // Condición para iniciar la simulación cuando se presiona la barra espaciadora (código 32)
+            if (z = 32){ 
+                do Screen.clearScreen(); // Limpia la pantalla para iniciar el juego
+                // Espera a que se suelte la barra espaciadora antes de continuar
+                while (z = 32){
+                    let z = Keyboard.keyPressed(); // Sigue capturando la tecla presionada
+                }
+                
+                do Screen.setColor(false);
+                let simulacion = Simulacion.nuevo();
+                do simulacion.empezar();
+                let controlRebote = false;
+                do Sys.wait(500);
+                do Screen.setColor(true);
+            }
+
+            // Condición para salir del programa si se presiona la tecla con el código 140
+            if (z = 140){
+                return;
+            }
+        }
+        return; // Retorno final del método
+    }
+}

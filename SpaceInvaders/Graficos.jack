@@ -1,0 +1,59 @@
+class Graficos {
+    // Método para dibujar la nave espacial en la pantalla
+    function void dibujarNaveEspacial(int x, int y, boolean color){
+        do Screen.setColor(~color); // Cambia el color de dibujo basado en el valor booleano (inverso de 'color')
+        // Dibuja las diferentes partes de la nave usando rectángulos
+        do Screen.drawRectangle(x+5,y+1,x+5,y+3); // Parte central del mástil
+        do Screen.drawRectangle(x+4,y+3,x+6,y+4); // Base del mástil
+        do Screen.drawRectangle(x+1,y+4,x+9,y+5); // Parte superior del cuerpo de la nave
+        do Screen.drawRectangle(x,y+5,x+10,y+8); // Cuerpo principal de la nave
+        return;
+    }
+
+    // Método para dibujar un disparo en la pantalla
+    function void dibujarDisparo(int x, int y, boolean color){
+        do Screen.setColor(~color); // Cambia el color de dibujo basado en el valor booleano
+        do Screen.drawRectangle(x,y,x+1,y+5); // Dibuja el disparo como un rectángulo vertical
+        return;
+    }
+
+    // Método para dibujar un enemigo en la pantalla
+    function void dibujarEnemigo(int x, int y, boolean color){
+        do Screen.setColor(~color);
+
+        // Dibuja los ojos del enemigo (dos píxeles)
+        do Screen.drawPixel(x+2, y);
+        do Screen.drawPixel(x+8, y);
+
+        // Dibuja las partes superiores del enemigo (antenas y estructura)
+        do Screen.drawPixel(x+3, y+1);
+        do Screen.drawPixel(x+7, y+1);
+        do Screen.drawRectangle(x+2, y+2, x+8, y+2);
+        
+        // Dibuja las "alas" del enemigo
+        do Screen.drawRectangle(x+1, y+3, x+2, y+3);
+        do Screen.drawRectangle(x+4, y+3, x+6, y+3);
+        do Screen.drawRectangle(x+8, y+3, x+9, y+3);
+
+        // Dibuja la parte principal del cuerpo del enemigo
+        do Screen.drawRectangle(x, y+4, x+10, y+4);
+
+        // Dibuja la base y detalles del cuerpo del enemigo
+        do Screen.drawPixel(x, y+5);
+        do Screen.drawRectangle(x+2, y+5, x+8, y+5);
+        do Screen.drawPixel(x+10, y+5);
+
+        // Dibuja los extremos del enemigo (piernas o patas)
+        do Screen.drawPixel(x, y+6);
+        do Screen.drawPixel(x+2, y+6);
+        do Screen.drawPixel(x+8, y+6);
+        do Screen.drawPixel(x+10, y+6);
+
+        // Dibuja los "pies" o la base final del enemigo
+        do Screen.drawPixel(x+3,y+7);
+        do Screen.drawPixel(x+4,y+7);
+        do Screen.drawPixel(x+6,y+7);
+        do Screen.drawPixel(x+7,y+7);
+        return;
+    }
+}

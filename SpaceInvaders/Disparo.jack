@@ -1,0 +1,79 @@
+class Disparo {
+    field int x,y; // Coordenadas 'x' e 'y' del disparo en la pantalla
+    field boolean activar; // Estado del disparo: true si está activado, false si está desactivado
+    
+    // Constructor para inicializar un nuevo disparo
+    constructor Disparo nuevo(int Ax,int Ay){
+        let x = Ax; // Asigna el valor de 'Ax' a la posición 'x'
+        let y = Ay; // Asigna el valor de 'Ay' a la posición 'y'
+        let activar = false; // Inicializa el disparo como inactivo
+        return this; // Retorna el objeto recién creado
+    }
+
+    // Método para eliminar el disparo
+    method void eliminar() {
+        do Memory.deAlloc(this); // Libera la memoria ocupada por el objeto
+        return;
+    }
+    
+    // Método para dibujar el disparo en la pantalla en su posición actual
+    method void dibujar(){
+        do Graficos.dibujarDisparo(x,y,false); // Llama a la función para dibujar el disparo
+        return;
+    }
+
+    // Método para actualizar la posición del disparo en la pantalla
+    method void actualizar(){
+        do Graficos.dibujarDisparo(x,y,true); // Dibuja el disparo en su posición actual
+        let y = y-2; // Mueve el disparo hacia arriba en 2 unidades
+        
+        if (y > 2){ // Si el disparo aún está dentro de los límites de la pantalla
+            do Graficos.dibujarDisparo(x,y,false); // Borra el disparo de la posición anterior
+        }else{ // Si el disparo sale de los límites de la pantalla
+            do establecerEstado(); // Cambia el estado a inactivo
+            do establecerY(225); // Reinicia la posición 'y' del disparo al valor inicial (225)
+        }
+        return;
+    }
+
+    // Método para obtener el estado del disparo (si está activo o inactivo)
+    method boolean obtenerEstado(){
+        return activar; // Retorna el valor actual de 'activar'
+    }
+
+    // Método para cambiar el estado del disparo (activa o desactiva)
+    method void establecerEstado(){
+        let activar = ~activar; // Cambia el estado actual de 'activar' al opuesto
+        return;
+    }
+
+    // Método para asignar un nuevo valor a la posición 'x' del disparo
+    method void establecerX(int nuevoX){
+        let x = nuevoX; // Actualiza el valor de 'x' con 'nuevoX'
+        return;
+    }
+
+    // Método para asignar un nuevo valor a la posición 'y' del disparo
+    method void establecerY(int nuevoY){
+        let y = nuevoY; // Actualiza el valor de 'y' con 'nuevoY'
+        return;
+    }
+
+    // Método para obtener el valor actual de la posición 'x' del disparo
+    method int obtenerX(){
+        return x; // Retorna el valor de 'x'
+    }
+
+    // Método para obtener el valor actual de la posición 'y' del disparo
+    method int obtenerY(){
+        return y; // Retorna el valor de 'y'
+    }
+
+    // Método para reiniciar el disparo, devolviéndolo a la posición inicial y cambiando su estado
+    method void reiniciar(){
+        do Graficos.dibujarDisparo(x,y,true); // Dibuja el disparo en la posición actual
+        do establecerEstado(); // Cambia el estado (activar/desactivar)
+        do establecerY(225); // Restablece 'y' a la posición inicial (225)
+        return;
+    }
+}

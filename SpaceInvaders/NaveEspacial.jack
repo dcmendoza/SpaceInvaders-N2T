@@ -1,0 +1,53 @@
+class NaveEspacial {
+    field int x, y; // Coordenadas de la nave espacial
+
+    constructor NaveEspacial nuevo(){
+        let x = 250; // Posición inicial en X
+        let y = 230; // Posición inicial en Y
+        return this;
+    }
+
+    method void dibujar(){
+        do Graficos.dibujarNaveEspacial(x,y,false); // Dibuja la nave en la pantalla
+        return;
+    }
+
+    method void moverIzquierda(){
+        if (x-2 > 160){ // Verifica el límite izquierdo
+            do Graficos.dibujarNaveEspacial(x,y,true); // Borra la posición actual
+            let x = x-2; // Mueve la nave a la izquierda
+            do Graficos.dibujarNaveEspacial(x,y,false); // Dibuja en la nueva posición
+        }
+        return;
+    }
+
+    method void moverDerecha(){
+        if (x+2 < 340){ // Verifica el límite derecho
+            do Graficos.dibujarNaveEspacial(x,y,true); // Borra la posición actual
+            let x = x+2; // Mueve la nave a la derecha
+            do Graficos.dibujarNaveEspacial(x,y,false); // Dibuja en la nueva posición
+        }
+        return;
+    }
+
+    method void Disparar(Disparo disparo){
+        if(disparo.obtenerEstado() = false){ // Dispara si el disparo no está activo
+            do disparo.establecerX(x+5); // Ajusta la posición inicial del disparo
+            do disparo.establecerEstado(); // Activa el disparo
+        }
+        return;
+    }
+
+    method int obtenerX(){
+        return x; // Retorna la posición X
+    }
+
+    method int obtenerY(){
+        return y; // Retorna la posición Y
+    }
+
+    method void eliminar() {
+        do Memory.deAlloc(this);
+        return; // Elimina la nave de la memoria
+    }
+}

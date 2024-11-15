@@ -1,0 +1,84 @@
+class Enemigo{
+    field int x,y; // Coordenadas 'x' e 'y' del enemigo en la pantalla
+    field boolean estado; // Estado del enemigo: true si está activo, false si está eliminado
+
+    // Constructor para inicializar un nuevo enemigo
+    constructor Enemigo nuevo(int Ax,int Ay){
+        let x = Ax; // Asigna el valor de 'Ax' a la posición 'x'
+        let y = Ay; // Asigna el valor de 'Ay' a la posición 'y'
+        let estado = true; // Inicializa el enemigo como activo
+        return this; // Retorna el objeto recién creado
+    }
+
+    // Método para eliminar al enemigo de la memoria
+    method void eliminar() {
+        do Memory.deAlloc(this); // Libera la memoria asignada al objeto actual
+        return;
+    }
+
+    // Método para dibujar al enemigo en la pantalla en su posición actual
+    method void dibujar(){
+        do Graficos.dibujarEnemigo(x,y,false); // Dibuja el enemigo en su posición
+        return;
+    }
+
+    // Método para verificar el movimiento del enemigo en función de su posición y la dirección
+    method boolean verificarMovimiento(boolean coincidenciaDireccion){
+    // Si la dirección coincide y el enemigo está activo
+        if(coincidenciaDireccion & estado){
+        // Si el enemigo está en el límite derecho
+            if (x > 339){
+                do Simulacion.establecerDireccion(-1); // Cambia la dirección hacia la izquierda
+                return false; // Movimiento inválido
+            }
+            // Si el enemigo está en el límite izquierdo
+            if (x < 170){
+                do Simulacion.establecerDireccion(1); // Cambia la dirección hacia la derecha
+                return false; // Movimiento inválido
+            }
+        }        
+        return true; // Movimiento permitido
+    }
+
+    // Método para actualizar la posición en el eje X (horizontal) del enemigo
+    method void actualizarX(){
+        if(estado){ // Solo si el enemigo está activo
+            do Graficos.dibujarEnemigo(x,y,true); // Borra la posición actual
+            let x = Simulacion.obtenerDireccion()*10+x; // Calcula la nueva posición en X
+            do Graficos.dibujarEnemigo(x,y,false); // Dibuja al enemigo en la nueva posición
+        }        
+        return;
+    }
+
+    // Método para actualizar la posición en el eje Y (vertical) del enemigo
+    method void actualizarY(){
+        if(estado){ // Solo si el enemigo está activo
+            do Graficos.dibujarEnemigo(x,y,true); // Borra la posición actual
+            let y = y + 10; // Mueve al enemigo hacia abajo en 10 unidades
+            do Graficos.dibujarEnemigo(x,y,false); // Dibuja al enemigo en la nueva posición
+        }       
+        return;
+    }
+
+    // Método para "matar" al enemigo, cambiando su estado a inactivo
+    method void matar(){
+        do Graficos.dibujarEnemigo(x,y,true); // Borra al enemigo de su posición actual
+        let estado = false; // Cambia el estado a inactivo
+        return;
+    }
+
+    // Método para obtener la posición X del enemigo
+    method int obtenerX(){
+        return x; // Retorna el valor de 'x'
+    }
+
+    // Método para obtener la posición Y del enemigo
+    method int obtenerY(){
+        return y; // Retorna el valor de 'y'
+    }
+
+    // Método para obtener el estado del enemigo
+    method boolean obtenerEstado(){
+        return estado; // Retorna el valor de 'estado'
+    }
+}
