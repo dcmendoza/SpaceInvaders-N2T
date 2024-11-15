@@ -1,0 +1,252 @@
+class Simulacion {
+    field NaveEspacial naveEspacial;
+    field Disparo disparo;
+    field Enemigo enemigo1, enemigo2, enemigo3, enemigo4, enemigo5, enemigo6;
+    field int numEnemigos;
+    static int direccion, direccionX;
+
+    constructor Simulacion nuevo(){
+        do Screen.drawRectangle(0,0,511,255);
+        do Screen.setColor(true);
+
+        let naveEspacial = NaveEspacial.nuevo();
+        let disparo = Disparo.nuevo(naveEspacial.obtenerX(), naveEspacial.obtenerY()-5); 
+        let direccion = 1;
+        let direccionX = 1;
+
+        let numEnemigos = 6;
+        let enemigo1 = Enemigo.nuevo(230, 60);
+        let enemigo2 = Enemigo.nuevo(250, 60);
+        let enemigo3 = Enemigo.nuevo(270, 60);
+        let enemigo4 = Enemigo.nuevo(230, 70);
+        let enemigo5 = Enemigo.nuevo(250, 150);
+        let enemigo6 = Enemigo.nuevo(270, 70);
+
+        do naveEspacial.dibujar();
+        do enemigo1.dibujar();
+        do enemigo2.dibujar();
+        do enemigo3.dibujar();
+        do enemigo4.dibujar();
+        do enemigo5.dibujar();
+        do enemigo6.dibujar();
+        do Sys.wait(1000);
+        return this;
+    }
+
+    method void empezar(){ 
+        var boolean simulacionActiva, msg;
+        var int z, controlReboteTiempo, controlReboteTiempoAlien, controlReboteTiempoDisparo, tiempo, tiempoEnemigo, tiempoDisparo;
+
+        let simulacionActiva = true;
+        let msg = true;
+        let controlReboteTiempo = 200;
+        let controlReboteTiempoAlien = 3000;
+        let controlReboteTiempoDisparo = 50;
+
+        while(simulacionActiva){ 
+            let tiempo = tiempo + 1;
+            if (tiempo = controlReboteTiempo){
+                let z = Keyboard.keyPressed();
+                if (z = 130){
+                    do naveEspacial.moverIzquierda();
+                }
+                if (z = 132){
+                    do naveEspacial.moverDerecha();
+                }
+                if (z = 32){
+                    if(disparo.obtenerEstado() = false){
+                        do disparo.establecerX(naveEspacial.obtenerX()+5); 
+                        do disparo.establecerEstado(); 
+                    }
+                }
+                let tiempo = 0;                
+            }
+
+            let tiempoDisparo = tiempoDisparo + 1;
+            if (tiempoDisparo = controlReboteTiempoDisparo){
+                if (disparo.obtenerEstado() = true){
+                    do disparo.actualizar();
+                    do comprobarColisiones();
+                }
+                let tiempoDisparo = 0;
+            }
+
+            let tiempoEnemigo = tiempoEnemigo + 1;
+            if (tiempoEnemigo = controlReboteTiempoAlien){
+                do actualizarEnemigos();
+                if(enemigosAlcanzanFondo()){
+                    let simulacionActiva = false;
+                }
+                let tiempoEnemigo = 0;
+            }            
+            
+            if (numEnemigos = 0){
+                let simulacionActiva = false;
+            }
+            if (z = 140){
+                do Screen.clearScreen();
+                let msg = false;
+                let simulacionActiva = false;
+            }
+        }
+
+        if(numEnemigos = 0){
+            do Ganaste(msg);
+        }else{
+            do Perdiste(msg);
+        }        
+
+        //Dispose from memory
+        do naveEspacial.eliminar();
+        do disparo.eliminar();
+        do enemigo1.eliminar();
+        do enemigo2.eliminar();
+        do enemigo3.eliminar();
+        do enemigo4.eliminar();
+        do enemigo5.eliminar();
+        do enemigo6.eliminar();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    //Simulacion over alert
+    method void Perdiste(boolean msg){
+        var int z;
+        if (msg){
+            do Output.moveCursor(11, 28);
+            do Output.printString("PERDISTE");
+            
+            do Sys.wait(500);
+            while (msg){
+                let z = Keyboard.keyPressed();
+                if (z = 140 | z = 32){
+                    let msg = false;
+                    while(~(z = 0)){  
+                        let z = Keyboard.keyPressed();             
+                    }
+                }
+            }
+        }      
+        return;
+    }
+
+    method void Ganaste(boolean msg){
+        var int z;
+        do Output.moveCursor(11, 29);
+        do Output.printString("GANASTE");
+        do Sys.wait(500);
+        while (msg){      
+            let z = Keyboard.keyPressed();
+            if (z = 140 | z = 32){
+                let msg = false;
+            }
+        }
+        return;
+    }
+    
+    method void actualizarEnemigos(){
+        var boolean moverseEnX, direcccionesCoinciden;
+        let direcccionesCoinciden = (direccion = direccionX);
+        let moverseEnX = true & enemigo1.verificarMovimiento(direcccionesCoinciden);
+        let moverseEnX = moverseEnX & enemigo2.verificarMovimiento(direcccionesCoinciden);
+        let moverseEnX = moverseEnX & enemigo3.verificarMovimiento(direcccionesCoinciden);
+        let moverseEnX = moverseEnX & enemigo4.verificarMovimiento(direcccionesCoinciden);
+        let moverseEnX = moverseEnX & enemigo5.verificarMovimiento(direcccionesCoinciden);
+        let moverseEnX = moverseEnX & enemigo6.verificarMovimiento(direcccionesCoinciden);
+        if (moverseEnX){
+            do enemigo1.actualizarX();
+            do enemigo2.actualizarX();
+            do enemigo3.actualizarX();
+            do enemigo4.actualizarX();
+            do enemigo5.actualizarX();
+            do enemigo6.actualizarX();
+            let direccionX = direccion;
+        }else{
+            do enemigo4.actualizarY();
+            do enemigo5.actualizarY();
+            do enemigo6.actualizarY();
+            do enemigo1.actualizarY();
+            do enemigo2.actualizarY();
+            do enemigo3.actualizarY();
+                        
+        }
+        return;
+    }
+
+    method boolean enemigosAlcanzanFondo(){
+        if (enemigo1.obtenerEstado()){
+            if (enemigo1.obtenerY() > 200){
+                return true;
+            }
+        }
+        if (enemigo2.obtenerEstado()){
+            if (enemigo2.obtenerY() > 200){
+                return true;
+            }
+        }
+        if (enemigo3.obtenerEstado()){
+            if (enemigo3.obtenerY() > 200){
+                return true;
+            }
+        }
+        if (enemigo4.obtenerEstado()){
+            if (enemigo4.obtenerY() > 200){
+                return true;
+            }
+        }
+        if (enemigo5.obtenerEstado()){
+            if (enemigo5.obtenerY() > 200){
+                return true;
+            }
+        }
+        if (enemigo6.obtenerEstado()){
+            if (enemigo6.obtenerY() > 200){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    method void comprobarColisiones(){
+        if ((enemigo1.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo1.obtenerX()-2)) & (disparo.obtenerX() < (enemigo1.obtenerX()+11)) & (disparo.obtenerY() > enemigo1.obtenerY()) & (disparo.obtenerY() < (enemigo1.obtenerY()+7))){
+            do enemigo1.matar();
+            do disparo.reiniciar();
+            let numEnemigos = numEnemigos-1;
+        }
+        if ((enemigo2.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo2.obtenerX()-2)) & (disparo.obtenerX() < (enemigo2.obtenerX()+11)) & (disparo.obtenerY() > enemigo2.obtenerY()) & (disparo.obtenerY() < (enemigo2.obtenerY()+7))){
+            do enemigo2.matar();
+            do disparo.reiniciar();
+            let numEnemigos = numEnemigos-1;
+        }
+        if ((enemigo3.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo3.obtenerX()-2)) & (disparo.obtenerX() < (enemigo3.obtenerX()+11)) & (disparo.obtenerY() > enemigo3.obtenerY()) & (disparo.obtenerY() < (enemigo3.obtenerY()+7))){
+            do enemigo3.matar();
+            do disparo.reiniciar();
+            let numEnemigos = numEnemigos-1;
+        }
+        if ((enemigo4.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo4.obtenerX()-2)) & (disparo.obtenerX() < (enemigo4.obtenerX()+11)) & (disparo.obtenerY() > enemigo4.obtenerY()) & (disparo.obtenerY() < (enemigo4.obtenerY()+7))){
+            do enemigo4.matar();
+            do disparo.reiniciar();
+            let numEnemigos = numEnemigos-1;
+        }
+        if ((enemigo5.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo5.obtenerX()-2)) & (disparo.obtenerX() < (enemigo5.obtenerX()+11)) & (disparo.obtenerY() > enemigo5.obtenerY()) & (disparo.obtenerY() < (enemigo5.obtenerY()+7))){
+            do enemigo5.matar();
+            do disparo.reiniciar();
+            let numEnemigos = numEnemigos-1;
+        }
+        if ((enemigo6.obtenerEstado() = true) & (disparo.obtenerX() > (enemigo6.obtenerX()-2)) & (disparo.obtenerX() < (enemigo6.obtenerX()+11)) & (disparo.obtenerY() > enemigo6.obtenerY()) & (disparo.obtenerY() < (enemigo6.obtenerY()+7))){
+            do enemigo6.matar();
+            do disparo.reiniciar();
+            let numEnemigos = numEnemigos-1;
+        }
+        return;
+    }
+    
+    function int obtenerDireccion(){
+        return direccion;
+    }
+
+    function void establecerDireccion(int nuevaDireccion){
+        let direccion = nuevaDireccion;
+        return;
+    }
+}

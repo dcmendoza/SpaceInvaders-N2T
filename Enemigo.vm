@@ -1,0 +1,149 @@
+function Enemigo.nuevo 0
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push constant 0
+not
+pop this 2
+push pointer 0
+return
+function Enemigo.eliminar 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Enemigo.dibujar 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarEnemigo 3
+pop temp 0
+push constant 0
+return
+function Enemigo.verificarMovimiento 0
+push argument 0
+pop pointer 0
+push argument 1
+push this 2
+and
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push constant 339
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 1
+neg
+call Simulacion.establecerDireccion 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE1
+push this 0
+push constant 170
+lt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 1
+call Simulacion.establecerDireccion 1
+pop temp 0
+push constant 0
+return
+label IF_FALSE2
+label IF_FALSE0
+push constant 0
+not
+return
+function Enemigo.actualizarX 0
+push argument 0
+pop pointer 0
+push this 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarEnemigo 3
+pop temp 0
+call Simulacion.obtenerDireccion 0
+push constant 10
+call Math.multiply 2
+push this 0
+add
+pop this 0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarEnemigo 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Enemigo.actualizarY 0
+push argument 0
+pop pointer 0
+push this 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarEnemigo 3
+pop temp 0
+push this 1
+push constant 10
+add
+pop this 1
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarEnemigo 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Enemigo.matar 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarEnemigo 3
+pop temp 0
+push constant 0
+pop this 2
+push constant 0
+return
+function Enemigo.obtenerX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Enemigo.obtenerY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Enemigo.obtenerEstado 0
+push argument 0
+pop pointer 0
+push this 2
+return

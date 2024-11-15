@@ -1,0 +1,118 @@
+function NaveEspacial.nuevo 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push constant 250
+pop this 0
+push constant 230
+pop this 1
+push pointer 0
+return
+function NaveEspacial.dibujar 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarNaveEspacial 3
+pop temp 0
+push constant 0
+return
+function NaveEspacial.moverIzquierda 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 2
+sub
+push constant 160
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarNaveEspacial 3
+pop temp 0
+push this 0
+push constant 2
+sub
+pop this 0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarNaveEspacial 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function NaveEspacial.moverDerecha 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 2
+add
+push constant 340
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarNaveEspacial 3
+pop temp 0
+push this 0
+push constant 2
+add
+pop this 0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarNaveEspacial 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function NaveEspacial.Disparar 0
+push argument 0
+pop pointer 0
+push argument 1
+call Disparo.obtenerEstado 1
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+push this 0
+push constant 5
+add
+call Disparo.establecerX 2
+pop temp 0
+push argument 1
+call Disparo.establecerEstado 1
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function NaveEspacial.obtenerX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function NaveEspacial.obtenerY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function NaveEspacial.eliminar 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return

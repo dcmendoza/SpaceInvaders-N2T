@@ -1,0 +1,52 @@
+class NaveEspacial {
+    field int x, y;  
+
+    constructor NaveEspacial nuevo(){
+        let x = 250;
+        let y = 230;
+        return this;
+    }
+
+    method void dibujar(){
+        do Graficos.dibujarNaveEspacial(x,y,false);
+        return;
+    }
+
+    method void moverIzquierda(){
+        if (x-2 > 160){
+            do Graficos.dibujarNaveEspacial(x,y,true);
+            let x = x-2;
+            do Graficos.dibujarNaveEspacial(x,y,false);
+        }
+        return;
+    }
+
+    method void moverDerecha(){
+        if (x+2 < 340){
+            do Graficos.dibujarNaveEspacial(x,y,true);
+            let x = x+2;
+            do Graficos.dibujarNaveEspacial(x,y,false);
+        }
+        return;
+    }
+
+    method void Disparar(Disparo disparo){
+        if(disparo.obtenerEstado() = false){
+            do disparo.establecerX(x+5); 
+            do disparo.establecerEstado(); 
+        }
+        return;
+    }
+    method int obtenerX(){
+        return x;
+    }
+
+    method int obtenerY(){
+        return y;
+    }
+
+    method void eliminar() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

@@ -1,0 +1,71 @@
+class Enemigo{
+    field int x,y;
+    field boolean estado;
+
+    constructor Enemigo nuevo(int Ax,int Ay){
+        let x = Ax;
+        let y = Ay;
+        let estado = true;
+        return this;
+    }
+
+    method void eliminar() {
+        do Memory.deAlloc(this);
+        return;
+    }
+    method void dibujar(){
+        do Graficos.dibujarEnemigo(x,y,false);
+        return;
+    }
+
+    
+    method boolean verificarMovimiento(boolean coincidenciaDireccion){
+        if(coincidenciaDireccion & estado){
+            if (x > 339){
+                do Simulacion.establecerDireccion(-1);
+                return false; 
+            }
+            if (x < 170){
+                do Simulacion.establecerDireccion(1);
+                return false; 
+            }
+        }        
+        return true;
+    }
+
+    method void actualizarX(){
+        if(estado){
+            do Graficos.dibujarEnemigo(x,y,true);
+            let x = Simulacion.obtenerDireccion()*10+x;
+            do Graficos.dibujarEnemigo(x,y,false);
+        }        
+        return;
+    }
+
+    method void actualizarY(){
+        if(estado){
+            do Graficos.dibujarEnemigo(x,y,true);
+            let y = y + 10;
+            do Graficos.dibujarEnemigo(x,y,false);
+        }       
+        return;
+    }
+
+    method void matar(){
+        do Graficos.dibujarEnemigo(x,y,true);
+        let estado = false;
+        return;
+    }
+
+    method int obtenerX(){
+        return x;
+    }
+
+    method int obtenerY(){
+        return y;
+    }
+
+    method boolean obtenerEstado(){
+        return estado;
+    }
+}

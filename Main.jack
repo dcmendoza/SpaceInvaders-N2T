@@ -1,0 +1,38 @@
+class Main {
+    function void main() { 
+        var Simulacion simulacion;
+        var int z;
+        var boolean controlRebote;
+
+        while(true){ 
+            if (~controlRebote){
+                do Screen.setColor(false);
+                do Screen.drawRectangle(0,0,511,255);
+                do Screen.setColor(true);         
+                do SpaceInvaders.establecerVista(185, 50);
+                let controlRebote = true;
+                do Sys.wait(300);
+            }           
+            let z = Keyboard.keyPressed();
+
+            if (z = 32){ 
+                do Screen.clearScreen();
+                while (z = 32){
+                    let z = Keyboard.keyPressed();
+                }
+                
+                do Screen.setColor(false);
+                let simulacion = Simulacion.nuevo();
+                do simulacion.empezar();
+                let controlRebote = false;
+                do Sys.wait(500);
+                do Screen.setColor(true);
+            }
+
+            if (z = 140){
+                return;
+            }
+        }
+        return;
+    }
+}

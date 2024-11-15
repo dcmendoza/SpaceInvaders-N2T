@@ -1,0 +1,121 @@
+function Disparo.nuevo 0
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push constant 0
+pop this 2
+push pointer 0
+return
+function Disparo.eliminar 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Disparo.dibujar 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarDisparo 3
+pop temp 0
+push constant 0
+return
+function Disparo.actualizar 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarDisparo 3
+pop temp 0
+push this 1
+push constant 2
+sub
+pop this 1
+push this 1
+push constant 2
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push this 1
+push constant 0
+call Graficos.dibujarDisparo 3
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push pointer 0
+call Disparo.establecerEstado 1
+pop temp 0
+push pointer 0
+push constant 225
+call Disparo.establecerY 2
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Disparo.obtenerEstado 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Disparo.establecerEstado 0
+push argument 0
+pop pointer 0
+push this 2
+not
+pop this 2
+push constant 0
+return
+function Disparo.establecerX 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 0
+push constant 0
+return
+function Disparo.establecerY 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 1
+push constant 0
+return
+function Disparo.obtenerX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Disparo.obtenerY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Disparo.reiniciar 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push constant 0
+not
+call Graficos.dibujarDisparo 3
+pop temp 0
+push pointer 0
+call Disparo.establecerEstado 1
+pop temp 0
+push pointer 0
+push constant 225
+call Disparo.establecerY 2
+pop temp 0
+push constant 0
+return
